@@ -3,9 +3,8 @@ import { useRoute } from '@react-navigation/native';
 import type { MovieDetailScreenRouteProp } from './types';
 import type { ImageURISource } from 'react-native';
 import React from 'react';
-import { usePrompt, displayPrompt } from '@redfast/react-native-redfast';
-import type { PathItem } from '@redfast/redfast-core';
-import { PathType } from '@redfast/redfast-core';
+import { usePrompt } from '@recurly/engage-react-native';
+import { PathType } from '@recurly/engage-core';
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -47,12 +46,12 @@ export default function MovieDetailScreen() {
   const {
     state: { promptMgr },
   } = usePrompt();
-  const [showModal, setShowModal] = React.useState(false);
-  const [pathItem, setPathItem] = React.useState<PathItem>();
 
   React.useEffect(() => {
     if (promptMgr) {
       (async () => {
+        promptMgr.screenChanged('detail');
+
         let prompts = promptMgr.getPrompts(PathType.BOTTOM_BANNER);
         console.log(JSON.stringify(prompts, null, 2));
         prompts = await promptMgr.getTriggerablePrompts(
@@ -68,18 +67,6 @@ export default function MovieDetailScreen() {
     }
   }, [promptMgr]);
 
-  const onButtonClicked = async () => {
-    if (promptMgr) {
-      const { path, delaySeconds } = await promptMgr.onButtonClicked('clickId');
-      if (path) {
-        setTimeout(() => {
-          setPathItem(path);
-          setShowModal(true);
-        }, delaySeconds);
-      }
-    }
-  };
-
   return (
     <View style={styles.container}>
       <Image source={{ uri: movie.sdPoster }} style={styles.movieImage} />
@@ -89,7 +76,10 @@ export default function MovieDetailScreen() {
       <Text style={styles.description}>Duration: 1 hr 49 mins</Text>
       <Text style={styles.description}>Director: {movie.directors}</Text>
       <Separator />
-      <Button title="Purchase" onPress={onButtonClicked} />
+      <Button
+        title="Purchase"
+        onPress={() => promptMgr?.buttonClicked('clickId')}
+      />
       <Separator />
       <FlatList
         data={detailRow}
@@ -97,10 +87,6 @@ export default function MovieDetailScreen() {
         renderItem={({ item: { image } }) => <Image source={image} />}
         ItemSeparatorComponent={Separator}
       />
-      {displayPrompt(showModal, pathItem, (result) => {
-        console.log(result);
-        setShowModal(false);
-      })}
     </View>
   );
 }
