@@ -23,7 +23,7 @@ const AppRoot: React.FC = () => {
   } = usePrompt();
   const [isReady, setReady] = React.useState(false);
   useFonts({
-    buttonFont: require('../assets/fonts/AllProDisplayC-Medium.ttf'),
+    buttonFont: require('../assets/fonts/AllProDisplayC-Bold.ttf'),
     otherFont: require('../assets/fonts/AllProDisplayC-Regular.ttf'),
   });
 

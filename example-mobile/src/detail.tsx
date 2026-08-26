@@ -44,6 +44,7 @@ export default function MovieDetailScreen() {
     },
   ]);
   const {
+    dispatch,
     state: { promptMgr },
   } = usePrompt();
 
@@ -52,20 +53,19 @@ export default function MovieDetailScreen() {
       (async () => {
         promptMgr.screenChanged('detail');
 
+        // test the getTriggerablePrompts and getPrompts APIs
         let prompts = promptMgr.getPrompts(PathType.BOTTOM_BANNER);
-        console.log(JSON.stringify(prompts, null, 2));
         prompts = await promptMgr.getTriggerablePrompts(
           'genres',
           '*',
           PathType.ALL
         );
-        console.log(JSON.stringify(prompts, null, 2));
         if (prompts.length > 0) {
           prompts[0]?.impression();
         }
       })();
     }
-  }, [promptMgr]);
+  }, [promptMgr, dispatch]);
 
   return (
     <View style={styles.container}>
@@ -78,7 +78,14 @@ export default function MovieDetailScreen() {
       <Separator />
       <Button
         title="Purchase"
-        onPress={() => promptMgr?.buttonClicked('clickId')}
+        onPress={() => promptMgr?.buttonClicked('purchase')}
+      />
+      <Separator />
+      <Button title="Rent" onPress={() => promptMgr?.buttonClicked('rent')} />
+      <Separator />
+      <Button
+        title="Wizard"
+        onPress={() => promptMgr?.buttonClicked('wizard')}
       />
       <Separator />
       <FlatList

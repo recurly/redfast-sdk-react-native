@@ -8,15 +8,16 @@ import {
   StyleSheet,
   useWindowDimensions,
   Text,
+  Platform,
 } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import type { HomeScreenNavigationProp, Movie } from './types';
+import { logicPixelToDevicePixel } from './types';
 import { getAllMovies } from './utils/webflow';
 import type { ImageURISource } from 'react-native';
 import { usePrompt, RecurlyInline } from '@recurly/engage-react-native';
 import type { PathItem } from '@recurly/engage-core';
-import { PromptResultCode } from '@recurly/engage-core';
 
 interface Row {
   id: string;
@@ -92,8 +93,8 @@ const FootNote = ({
 
 export default function HomeScreen() {
   const [rowList, setRowList] = React.useState<Row[]>([]);
-
   const {
+    dispatch,
     state: { promptMgr },
   } = usePrompt();
 
@@ -147,7 +148,7 @@ export default function HomeScreen() {
         promptMgr.screenChanged('home');
       })();
     }
-  }, [promptMgr]);
+  }, [promptMgr, dispatch]);
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -168,44 +169,26 @@ export default function HomeScreen() {
             case 'banner':
               return (
                 <RecurlyInline
-                  zoneId="android-banner"
+                  zoneId={
+                    Platform.OS === 'ios'
+                      ? 'redflix-banner-phone'
+                      : 'android-banner'
+                  }
                   closeButtonColor="#000000"
                   closeButtonBgColor="#FFFFFF"
-                  closeButtonSize="20"
-                  timerFontSize="14"
+                  closeButtonSize="12"
+                  timerFontSize="12"
                   timerFontColor="#FFFFFF"
-                  focusStyle={{}}
-                  onEvent={(result) => {
-                    const getEventName = (code: PromptResultCode) => {
-                      switch (code) {
-                        case PromptResultCode.IMPRESSION:
-                          return 'Prompt Impression';
-                        case PromptResultCode.BUTTON1:
-                          return 'Prompt Click';
-                        case PromptResultCode.BUTTON2:
-                          return 'Prompt Click2';
-                        case PromptResultCode.BUTTON3:
-                          return 'Prompt Decline';
-                        case PromptResultCode.DISMISS:
-                          return 'Prompt Dismiss';
-                        case PromptResultCode.TIMEOUT:
-                          return 'Prompt Timeout';
-                        case PromptResultCode.HOLDOUT:
-                          return 'Prompt Holdout';
-                        default:
-                          return 'Prompt Event';
-                      }
-                    };
-
-                    const analyticsData = {
-                      name: getEventName(result.code),
-                      data: {
-                        ...result.promptMeta,
-                        timestamp: new Date().toISOString()
-                      }
-                    };
-                    console.log('ANALYTICS:', JSON.stringify(analyticsData, null, 2));
+                  focusStyle={{
+                    borderWidth: 2,
+                    borderColor: '#ff0000',
+                    borderRadius: 5,
                   }}
+                  onEvent={(result) =>
+                    console.log(
+                      JSON.stringify({ ...result, source: 'banner' }, null, 2)
+                    )
+                  }
                 />
               );
             case 'highligt':
@@ -268,14 +251,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   movieImagePortrait: {
-    width: 240,
-    height: 320,
+    width: logicPixelToDevicePixel(240),
+    height: logicPixelToDevicePixel(320),
     borderRadius: 10,
     marginRight: 10,
   },
   movieImageLandscape: {
-    width: 320,
-    height: 180,
+    width: logicPixelToDevicePixel(320),
+    height: logicPixelToDevicePixel(180),
     borderRadius: 10,
     marginRight: 10,
   },

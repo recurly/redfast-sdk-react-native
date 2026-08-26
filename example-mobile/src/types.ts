@@ -1,5 +1,6 @@
 import type { StackNavigationProp } from '@react-navigation/stack';
 import type { RouteProp } from '@react-navigation/native';
+import { PixelRatio } from 'react-native';
 
 export interface Movie {
   id: string;
@@ -25,3 +26,7 @@ export type MovieDetailScreenRouteProp = RouteProp<
   RootStackParamList,
   'MovieDetail'
 >;
+
+export const logicPixelToDevicePixel = (lp: number = 0) => {
+  return lp / PixelRatio.get();
+};
