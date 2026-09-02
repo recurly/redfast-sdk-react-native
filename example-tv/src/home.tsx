@@ -14,13 +14,8 @@ import { useNavigation } from '@react-navigation/native';
 import type { HomeScreenNavigationProp, Movie } from './types';
 import { getAllMovies } from './utils/webflow';
 import type { ImageURISource } from 'react-native';
-import {
-  usePrompt,
-  displayPrompt,
-  RedfastInline,
-} from '@redfast/react-native-redfast';
-import type { PathItem } from '@redfast/redfast-core';
-import { PromptResultCode } from '@redfast/redfast-core';
+import { usePrompt, RecurlyInline } from '@recurly/engage-react-native';
+import type { PathItem } from '@recurly/engage-core';
 
 interface Row {
   id: string;
@@ -96,8 +91,6 @@ const FootNote = ({
 
 export default function HomeScreen() {
   const [rowList, setRowList] = React.useState<Row[]>([]);
-  const [showModal, setShowModal] = React.useState(false);
-  const [pathItem, setPathItem] = React.useState<PathItem>();
 
   const {
     state: { promptMgr },
@@ -150,13 +143,7 @@ export default function HomeScreen() {
         });
         setRowList(rows);
 
-        const { path, delaySeconds } = await promptMgr.onScreenChanged('home');
-        if (path) {
-          setTimeout(() => {
-            setPathItem(path);
-            setShowModal(true);
-          }, delaySeconds);
-        }
+        promptMgr.screenChanged('home');
       })();
     }
   }, [promptMgr]);
@@ -179,13 +166,18 @@ export default function HomeScreen() {
               );
             case 'banner':
               return (
-                <RedfastInline
+                <RecurlyInline
                   zoneId="android-banner"
                   closeButtonColor="#000000"
                   closeButtonBgColor="#FFFFFF"
                   closeButtonSize="20"
                   timerFontSize="14"
                   timerFontColor="#FFFFFF"
+                  focusStyle={{
+                    borderWidth: 2,
+                    borderColor: '#ff0000',
+                    borderRadius: 5,
+                  }}
                   onEvent={(result) =>
                     console.log(
                       JSON.stringify({ ...result, source: 'banner' }, null, 2)
@@ -223,14 +215,7 @@ export default function HomeScreen() {
       <TouchableOpacity
         onPress={async () => {
           if (promptMgr) {
-            const { path, delaySeconds } =
-              await promptMgr.onButtonClicked('clickId');
-            if (path) {
-              setTimeout(() => {
-                setPathItem(path);
-                setShowModal(true);
-              }, delaySeconds);
-            }
+            promptMgr.buttonClicked('clickId');
             await promptMgr.customTrack('genres');
             await promptMgr.resetGoal();
           }
@@ -238,13 +223,6 @@ export default function HomeScreen() {
       >
         <FootNote message="Reset Prompts" color="blue" />
       </TouchableOpacity>
-      {displayPrompt(showModal, pathItem, (result) => {
-        console.log(JSON.stringify({ ...result, source: 'modal' }, null, 2));
-        const { code } = result;
-        if (code !== PromptResultCode.IMPRESSION) {
-          setShowModal(false);
-        }
-      })}
     </View>
   );
 }

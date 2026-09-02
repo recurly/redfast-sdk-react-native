@@ -1,8 +1,7 @@
 import type { Movie } from '../types';
 
 const BaseUrl = 'https://api.webflow.com/v2';
-const BearerToken =
-  'Bearer <YOUR_WEBFLOW_TOKEN>';
+const BearerToken = 'Bearer <YOUR_WEBFLOW_TOKEN>';
 
 interface Thumbnail {
   url: string;

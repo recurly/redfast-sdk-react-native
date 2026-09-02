@@ -8,19 +8,16 @@ import {
   StyleSheet,
   useWindowDimensions,
   Text,
+  Platform,
 } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import type { HomeScreenNavigationProp, Movie } from './types';
+import { logicPixelToDevicePixel } from './types';
 import { getAllMovies } from './utils/webflow';
 import type { ImageURISource } from 'react-native';
-import {
-  usePrompt,
-  displayPrompt,
-  RedfastInline,
-} from '@redfast/react-native-redfast';
-import type { PathItem } from '@redfast/redfast-core';
-import { PromptResultCode } from '@redfast/redfast-core';
+import { usePrompt, RecurlyInline } from '@recurly/engage-react-native';
+import type { PathItem } from '@recurly/engage-core';
 
 interface Row {
   id: string;
@@ -96,10 +93,8 @@ const FootNote = ({
 
 export default function HomeScreen() {
   const [rowList, setRowList] = React.useState<Row[]>([]);
-  const [showModal, setShowModal] = React.useState(false);
-  const [pathItem, setPathItem] = React.useState<PathItem>();
-
   const {
+    dispatch,
     state: { promptMgr },
   } = usePrompt();
 
@@ -150,16 +145,10 @@ export default function HomeScreen() {
         });
         setRowList(rows);
 
-        const { path, delaySeconds } = await promptMgr.onScreenChanged('home');
-        if (path) {
-          setTimeout(() => {
-            setPathItem(path);
-            setShowModal(true);
-          }, delaySeconds);
-        }
+        promptMgr.screenChanged('home');
       })();
     }
-  }, [promptMgr]);
+  }, [promptMgr, dispatch]);
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -179,44 +168,27 @@ export default function HomeScreen() {
               );
             case 'banner':
               return (
-                <RedfastInline
-                  zoneId="android-banner"
+                <RecurlyInline
+                  zoneId={
+                    Platform.OS === 'ios'
+                      ? 'redflix-banner-phone'
+                      : 'android-banner'
+                  }
                   closeButtonColor="#000000"
                   closeButtonBgColor="#FFFFFF"
-                  closeButtonSize="20"
-                  timerFontSize="14"
+                  closeButtonSize="12"
+                  timerFontSize="12"
                   timerFontColor="#FFFFFF"
-                  onEvent={(result) => {
-                    const getEventName = (code: PromptResultCode) => {
-                      switch (code) {
-                        case PromptResultCode.IMPRESSION:
-                          return 'Redfast Impression';
-                        case PromptResultCode.BUTTON1:
-                          return 'Redfast Click';
-                        case PromptResultCode.BUTTON2:
-                          return 'Redfast Click2';
-                        case PromptResultCode.BUTTON3:
-                          return 'Redfast Decline';
-                        case PromptResultCode.DISMISS:
-                          return 'Redfast Dismiss';
-                        case PromptResultCode.TIMEOUT:
-                          return 'Redfast Timeout';
-                        case PromptResultCode.HOLDOUT:
-                          return 'Redfast Holdout';
-                        default:
-                          return 'Redfast Event';
-                      }
-                    };
-
-                    const analyticsData = {
-                      name: getEventName(result.code),
-                      data: {
-                        ...result.promptMeta,
-                        timestamp: new Date().toISOString()
-                      }
-                    };
-                    console.log('ANALYTICS:', JSON.stringify(analyticsData, null, 2));
+                  focusStyle={{
+                    borderWidth: 2,
+                    borderColor: '#ff0000',
+                    borderRadius: 5,
                   }}
+                  onEvent={(result) =>
+                    console.log(
+                      JSON.stringify({ ...result, source: 'banner' }, null, 2)
+                    )
+                  }
                 />
               );
             case 'highligt':
@@ -249,14 +221,7 @@ export default function HomeScreen() {
       <TouchableOpacity
         onPress={async () => {
           if (promptMgr) {
-            const { path, delaySeconds } =
-              await promptMgr.onButtonClicked('clickId');
-            if (path) {
-              setTimeout(() => {
-                setPathItem(path);
-                setShowModal(true);
-              }, delaySeconds);
-            }
+            promptMgr.buttonClicked('clickId');
             await promptMgr.customTrack('genres');
             await promptMgr.resetGoal();
           }
@@ -264,13 +229,6 @@ export default function HomeScreen() {
       >
         <FootNote message="Reset Prompts" color="blue" />
       </TouchableOpacity>
-      {displayPrompt(showModal, pathItem, (result) => {
-        console.log(JSON.stringify({ ...result, source: 'modal' }, null, 2));
-        const { code } = result;
-        if (code !== PromptResultCode.IMPRESSION) {
-          setShowModal(false);
-        }
-      })}
     </View>
   );
 }
@@ -293,14 +251,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   movieImagePortrait: {
-    width: 240,
-    height: 320,
+    width: logicPixelToDevicePixel(240),
+    height: logicPixelToDevicePixel(320),
     borderRadius: 10,
     marginRight: 10,
   },
   movieImageLandscape: {
-    width: 320,
-    height: 180,
+    width: logicPixelToDevicePixel(320),
+    height: logicPixelToDevicePixel(180),
     borderRadius: 10,
     marginRight: 10,
   },
