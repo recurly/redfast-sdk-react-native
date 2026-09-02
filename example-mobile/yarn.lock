@@ -1625,6 +1625,20 @@
   resolved "https://registry.yarnpkg.com/@recurly/engage-core/-/engage-core-3.0.0.tgz#84975d23ea7a227a29e9cc2d782de5af8761a275"
   integrity sha512-Awc46uIoaHrfdoU7eAFsMoOLfpJpWwBlAfE3eGk4M2FVWLZaNRXq6r/hQJpGkKeggGrwzAa10c+YFgAGOJ9NcQ==
 
+"@recurly/engage-core@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@recurly/engage-core/-/engage-core-3.0.1.tgz#76b79ee8ee6ae321061d5544109dbbf65f70f2f1"
+  integrity sha512-/6ioJmG2f3T04qBMZMW33BepSemHBDV7jSUnfgLP8AyeDSnkmwqb2Q6Nu+dJF/zkctv2FR37/EBXpieNYi9Vzw==
+
+"@recurly/engage-react-native@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@recurly/engage-react-native/-/engage-react-native-3.0.1.tgz#4a306731d34fe085b0940de8dcbf07e3fc5999b4"
+  integrity sha512-yECelRGe+uRjespmJil8X4PQ8SKll2tEx8pk3M1QaAMrASw3RMtlcgyT62MyCL6bmtiWimTPt79/3V1J1yvzjw==
+  dependencies:
+    "@react-native-async-storage/async-storage" "^2.1.1"
+    "@recurly/engage-core" "^3.0.0"
+    expo-device "^7.0.2"
+    expo-video "^2.0.5"
 
 "@segment/loosely-validate-event@^2.0.0":
   version "2.0.0"
