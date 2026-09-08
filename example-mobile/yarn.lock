@@ -1620,21 +1620,25 @@
     "@react-navigation/elements" "^2.3.8"
     color "^4.2.3"
 
-"@redfast/react-native-redfast@^1.0.1":
-  version "1.0.3"
-  resolved "https://npm.pkg.github.com/download/@redfast/react-native-redfast/1.0.3/cc15c20832cc807030ed12242679d67858441c40#cc15c20832cc807030ed12242679d67858441c40"
-  integrity sha512-51UipwZyfp6khlClrerGT1JdkrJ+HtvIYQ9L4r26MF4cA/Zp3JBzVfKm7xIb8n8nHGEF48GgEwAiD7THfQQe5A==
+"@recurly/engage-core@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@recurly/engage-core/-/engage-core-3.0.0.tgz#84975d23ea7a227a29e9cc2d782de5af8761a275"
+  integrity sha512-Awc46uIoaHrfdoU7eAFsMoOLfpJpWwBlAfE3eGk4M2FVWLZaNRXq6r/hQJpGkKeggGrwzAa10c+YFgAGOJ9NcQ==
+
+"@recurly/engage-core@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@recurly/engage-core/-/engage-core-3.0.1.tgz#76b79ee8ee6ae321061d5544109dbbf65f70f2f1"
+  integrity sha512-/6ioJmG2f3T04qBMZMW33BepSemHBDV7jSUnfgLP8AyeDSnkmwqb2Q6Nu+dJF/zkctv2FR37/EBXpieNYi9Vzw==
+
+"@recurly/engage-react-native@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@recurly/engage-react-native/-/engage-react-native-3.0.1.tgz#4a306731d34fe085b0940de8dcbf07e3fc5999b4"
+  integrity sha512-yECelRGe+uRjespmJil8X4PQ8SKll2tEx8pk3M1QaAMrASw3RMtlcgyT62MyCL6bmtiWimTPt79/3V1J1yvzjw==
   dependencies:
     "@react-native-async-storage/async-storage" "^2.1.1"
-    "@redfast/redfast-core" "^1.0.0"
+    "@recurly/engage-core" "^3.0.0"
     expo-device "^7.0.2"
     expo-video "^2.0.5"
-    react-native-vector-icons "^10.2.0"
-
-"@redfast/redfast-core@^1.0.0":
-  version "1.0.1"
-  resolved "https://npm.pkg.github.com/download/@redfast/redfast-core/1.0.1/a146631a48c3960a4c62bf1d12c2ac12a331d6d4#a146631a48c3960a4c62bf1d12c2ac12a331d6d4"
-  integrity sha512-ELxvjGdwh8Nd27OZs39xwTsLRuBVptUSFtLbjAS+F9UzqpRtVNoMVTe2d2JWKXRN9O6D4rUPdxReYiggFbOApA==
 
 "@segment/loosely-validate-event@^2.0.0":
   version "2.0.0"
@@ -2331,15 +2335,6 @@ cli-spinners@^2.0.0:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/cli-spinners/-/cli-spinners-2.9.2.tgz#1773a8f4b9c4d6ac31563df53b3fc1d79462fe41"
   integrity sha512-ywqV+5MmyL4E7ybXgKys4DugZbX0FC6LnwrhjuykIjnK9k8OQacQ7axGKnjDXWNhns0xot3bZI5h55H8yo9cJg==
-
-cliui@^7.0.2:
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/cliui/-/cliui-7.0.4.tgz#a0265ee655476fc807aea9df3df8df7783808b4f"
-  integrity sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ==
-  dependencies:
-    string-width "^4.2.0"
-    strip-ansi "^6.0.0"
-    wrap-ansi "^7.0.0"
 
 cliui@^8.0.1:
   version "8.0.1"
@@ -4804,14 +4799,6 @@ react-native-screens@~4.4.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-react-native-vector-icons@^10.2.0:
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-10.2.0.tgz#f438f2ca16f7d6be658fd6ec8f0d2b7e2132b91c"
-  integrity sha512-n5HGcxUuVaTf9QJPs/W22xQpC2Z9u0nb0KgLPnVltP8vdUvOp6+R26gF55kilP/fV4eL4vsAHUqUjewppJMBOQ==
-  dependencies:
-    prop-types "^15.7.2"
-    yargs "^16.1.1"
-
 react-native@0.76.7:
   version "0.76.7"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.76.7.tgz#db7791674e52d741d2fe5a9cca59543bf1e10822"
@@ -5885,28 +5872,10 @@ yallist@^4.0.0:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
-yargs-parser@^20.2.2:
-  version "20.2.9"
-  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.9.tgz#2eb7dc3b0289718fc295f362753845c41a0c94ee"
-  integrity sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==
-
 yargs-parser@^21.1.1:
   version "21.1.1"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-21.1.1.tgz#9096bceebf990d21bb31fa9516e0ede294a77d35"
   integrity sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==
-
-yargs@^16.1.1:
-  version "16.2.0"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.2.0.tgz#1c82bf0f6b6a66eafce7ef30e376f49a12477f66"
-  integrity sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==
-  dependencies:
-    cliui "^7.0.2"
-    escalade "^3.1.1"
-    get-caller-file "^2.0.5"
-    require-directory "^2.1.1"
-    string-width "^4.2.0"
-    y18n "^5.0.5"
-    yargs-parser "^20.2.2"
 
 yargs@^17.6.2:
   version "17.7.2"

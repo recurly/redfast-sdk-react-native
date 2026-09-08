@@ -1,8 +1,8 @@
-# Redfast React Native Example App
+# Recurly Engage React Native Example App
 
-Contact your Customer Success Manager to obtain the Redfast tokens in order to activate the test app. Apply the necessary changes before starting the steps below.
+The `@recurly/engage-react-native` and `@recurly/engage-core` packages are published on the public npm registry, so no auth token or `.npmrc` registry override is required to install them. Update the `appId` / `userId` values in `src/app.tsx` with your own Pulse app credentials before starting the app below.
 
-## Install Redfast react native SDK packages
+## Install Recurly Engage React Native SDK packages
 
 ```bash
 npm install # OR yarn install

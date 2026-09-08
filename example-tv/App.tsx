@@ -3,21 +3,24 @@ import HomeScreen from "./src/home";
 import MovieDetailScreen from "./src/detail";
 import { NavigationContainer } from "@react-navigation/native";
 import {
-  PromptAction_Init,
   PromptAction_Font_Button,
   PromptAction_Font_Timer,
   PromptAction_Font_LegalText,
   PromptProvider,
   usePrompt,
-} from "@redfast/react-native-redfast";
+  PromptOverlay,
+} from "@recurly/engage-react-native";
 import React from "react";
-import { PromptManager } from "@redfast/react-native-redfast";
+import type { PromptResult } from "@recurly/engage-core";
 import { useFonts } from "expo-font";
 
 const Stack = createStackNavigator();
 
 const AppRoot: React.FC = () => {
-  const { dispatch } = usePrompt();
+  const {
+    dispatch,
+    state: { promptMgr },
+  } = usePrompt();
   const [isReady, setReady] = React.useState(false);
   useFonts({
     buttonFont: require("./assets/fonts/AllProDisplayC-Medium.ttf"),
@@ -25,42 +28,32 @@ const AppRoot: React.FC = () => {
   });
 
   React.useEffect(() => {
-    if (dispatch) {
-      const promptMgr = new PromptManager(
-        '<YOUR_PULSE_APP_ID>',
-        '<YOUR_PULSE_USER_ID>'
-      );
-      const intervalId = setInterval(() => {
-        if (promptMgr.isInitialized()) {
-          dispatch({
-            type: PromptAction_Init,
-            data: promptMgr,
-          });
-          dispatch({
-            type: PromptAction_Font_Button,
-            data: "buttonFont",
-          });
-          dispatch({
-            type: PromptAction_Font_Timer,
-            data: "otherFont",
-          });
-          dispatch({
-            type: PromptAction_Font_LegalText,
-            data: "otherFont",
-          });
-          setReady(true);
-          clearInterval(intervalId);
-        }
-      }, 1000);
-      return () => clearInterval(intervalId);
-    }
-    return () => {};
-  }, [dispatch]);
+    if (!promptMgr) return;
+    const intervalId = setInterval(() => {
+      if (promptMgr.isInitialized()) {
+        dispatch({
+          type: PromptAction_Font_Button,
+          data: "buttonFont",
+        });
+        dispatch({
+          type: PromptAction_Font_Timer,
+          data: "otherFont",
+        });
+        dispatch({
+          type: PromptAction_Font_LegalText,
+          data: "otherFont",
+        });
+        setReady(true);
+        clearInterval(intervalId);
+      }
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [promptMgr]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <NavigationContainer>
       {isReady && (
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen
             name="Home"
             component={HomeScreen}
@@ -73,13 +66,18 @@ const AppRoot: React.FC = () => {
           />
         </Stack.Navigator>
       )}
+      <PromptOverlay
+        onEvent={(result: PromptResult) => {
+          console.log(JSON.stringify({ ...result, source: "modal" }, null, 2));
+        }}
+      />
     </NavigationContainer>
   );
 };
 
 export default function App() {
   return (
-    <PromptProvider>
+    <PromptProvider appId="<YOUR_PULSE_APP_ID>" userId="<YOUR_PULSE_USER_ID>">
       <AppRoot />
     </PromptProvider>
   );

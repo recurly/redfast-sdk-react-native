@@ -1,31 +1,27 @@
 ---
 name: engage
-description: Guide for integrating the Recurly Engage React Native SDK (V2). Use when the user asks about @redfast packages, PromptProvider, PromptOverlay, RedfastInline, screenChanged, buttonClicked, PromptResult, or any Recurly Engage SDK setup.
+description: Guide for integrating the Recurly Engage React Native SDK (V3). Use when the user asks about @recurly/engage packages, PromptProvider, PromptOverlay, RecurlyInline, screenChanged, buttonClicked, PromptResult, or any Recurly Engage SDK setup.
 ---
 
 # SDK Integration Skill
 
-This skill guides Claude when helping users integrate the Recurly Engage React Native SDK V2 (version 2.x.y) into their apps. The SDK ships as two packages:
+This skill guides Claude when helping users integrate the Recurly Engage React Native SDK V3 (version 3.x.y) into their apps. The SDK ships as two packages, published to the public npm registry:
 
-- `@redfast/redfast-core` — platform-agnostic business logic (ping loop, path matching, suppression, prompt factory)
-- `@redfast/react-native-redfast` — React Native UI layer (components, context, device detection)
+- `@recurly/engage-core` — platform-agnostic business logic (ping loop, path matching, suppression, prompt factory)
+- `@recurly/engage-react-native` — React Native UI layer (components, context, device detection)
 
-Users only import from both packages directly; `redfast-core` is a peer dependency that also exposes shared types.
+Users only import from both packages directly; `engage-core` is a peer dependency that also exposes shared types.
 
 ---
 
 ## Installation
 
-```bash
-# .npmrc (get AUTHTOKEN from Customer Success Manager)
-@redfast:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=AUTHTOKEN
-```
+No registry override or auth token is required — both packages install from plain public npm.
 
 ```bash
-npm install @redfast/redfast-core @redfast/react-native-redfast
+npm install @recurly/engage-core @recurly/engage-react-native
 # or
-yarn add @redfast/redfast-core @redfast/react-native-redfast
+yarn add @recurly/engage-core @recurly/engage-react-native
 ```
 
 ---
@@ -57,8 +53,8 @@ export default function App() {
 import {
   usePrompt, PromptOverlay,
   PromptAction_Font_Button, PromptAction_Font_Timer, PromptAction_Font_LegalText,
-} from '@redfast/react-native-redfast';
-import type { PromptResult } from '@redfast/redfast-core';
+} from '@recurly/engage-react-native';
+import type { PromptResult } from '@recurly/engage-core';
 
 const AppRoot: React.FC = () => {
   const { dispatch, state: { promptMgr } } = usePrompt();
@@ -137,12 +133,12 @@ Both methods return `void` — the matched prompt (if any) is automatically disp
 
 ## Inline Prompts
 
-Use `<RedfastInline>` to embed a non-modal prompt directly in the layout. It scales to fit its container.
+Use `<RecurlyInline>` to embed a non-modal prompt directly in the layout. It scales to fit its container.
 
 ```tsx
-import { RedfastInline } from '@redfast/react-native-redfast';
+import { RecurlyInline } from '@recurly/engage-react-native';
 
-<RedfastInline
+<RecurlyInline
   zoneId="my-banner-zone"      // matches rf_settings_zone_id in Pulse
   closeButtonColor="#000000"
   closeButtonBgColor="#FFFFFF"
@@ -173,7 +169,7 @@ zoneId={Platform.OS === 'ios' ? 'ios-banner' : 'android-banner'}
 When the built-in UI components don't fit the design, retrieve prompt metadata directly and render your own UI.
 
 ```tsx
-import { PathType } from '@redfast/redfast-core';
+import { PathType } from '@recurly/engage-core';
 
 // All prompts of a given type (ignores trigger criteria)
 const prompts = promptMgr.getPrompts(PathType.ALL);
@@ -220,7 +216,7 @@ await prompt.holdout();     // user is in control group — don't show
 
 ## Handling Prompt Results (`PromptResult`)
 
-`PromptResult` is returned by `PromptOverlay.onEvent`, `RedfastInline.onEvent`, and all `Prompt` interaction methods.
+`PromptResult` is returned by `PromptOverlay.onEvent`, `RecurlyInline.onEvent`, and all `Prompt` interaction methods.
 
 ```ts
 interface PromptResult {
@@ -353,6 +349,6 @@ const meta = promptMgr.getMeta();
 
 4. **Calling `getTriggerablePrompts` without `await`** — it is async (checks holdout and suppression state in local storage).
 
-5. **Using the same zone ID across different inline zones** — each `<RedfastInline>` instance should have a unique `zoneId` matching its Pulse configuration.
+5. **Using the same zone ID across different inline zones** — each `<RecurlyInline>` instance should have a unique `zoneId` matching its Pulse configuration.
 
 6. **Not reporting `impression` for custom rendering** — if using `getPrompts` / `getTriggerablePrompts`, you are responsible for calling `prompt.impression()` when the prompt is shown and `prompt.holdout()` when the user is in the control group.
